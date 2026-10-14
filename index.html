@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DataFixer: fix your customer data without the risk</title>
+<meta name="description" content="DataFixer finds what is wrong in your customer files, shows you every change before it happens, and lets you undo it afterwards. Opening soon.">
+<meta name="theme-color" content="#EEF1EC">
+<meta property="og:title" content="DataFixer: fix your customer data without the risk">
+<meta property="og:description" content="Find what is wrong in your customer files. Preview every change. Undo it afterwards. Opening soon.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%231B2A3A'/%3E%3Cpath d='M8 17l5 5 11-12' fill='none' stroke='%237FB2FF' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<script>
+  /* Start the demo in its "before" state only when motion is welcome and scripting works.
+     Everyone else sees the finished state straight away. */
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.documentElement.classList.add('js-before');
+  }
+</script>
+<style>
+  :root {
+    --paper: #EEF1EC;
+    --panel: #FAFBF8;
+    --ink: #1B2A3A;
+    --muted: #55626D;
+    --line: #C9D1C9;
+    --grid: rgba(27, 42, 58, 0.055);
+    --fix: #1F5FBF;
+    --fix-bg: #DCE8FB;
+    --fix-flash: #B7D0F6;
+    --old: #8C3B33;
+    --flag: #C2554B;
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, "Cascadia Code", "SF Mono", Menlo, Consolas, monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    background-color: var(--paper);
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 32px 32px;
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 1.0625rem;
+    line-height: 1.55;
+  }
+
+  .wrap {
+    width: 100%;
+    max-width: 71rem;
+    margin-inline: auto;
+    padding-inline: clamp(1rem, 4vw, 2.5rem);
+  }
+
+  a { color: var(--fix); }
+  a:hover { text-decoration-thickness: 2px; }
+  :focus-visible { outline: 3px solid var(--fix); outline-offset: 3px; border-radius: 2px; }
+
+  /* top bar */
+  .bar { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; padding-block: 1.5rem; }
+  .brand { font-family: var(--serif); font-weight: 700; font-size: 1.45rem; letter-spacing: -0.01em; }
+  .soon { color: var(--muted); font-size: 0.95rem; }
+
+  /* hero */
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: clamp(2rem, 5vw, 4.5rem);
+    align-items: center;
+    padding-block: clamp(1.5rem, 5vw, 4rem) clamp(2.5rem, 6vw, 5rem);
+  }
+
+  h1 {
+    margin: 0 0 1.25rem;
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: clamp(2.5rem, 5.4vw, 4.1rem);
+    line-height: 1.03;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  .lead { margin: 0 0 1.5rem; max-width: 31em; font-size: 1.18rem; color: var(--ink); }
+
+  .promises { list-style: none; margin: 0 0 1.5rem; padding: 0; }
+  .promises li { position: relative; padding-left: 1.4rem; margin-block: 0.35rem; }
+  .promises li::before {
+    content: ""; position: absolute; left: 0; top: 0.62em;
+    width: 0.62rem; height: 0.62rem; background: var(--fix); border-radius: 1px;
+  }
+
+  .formats { margin: 0 0 2rem; color: var(--muted); font-size: 0.98rem; }
+
+  /* early access (hidden until configured) */
+  .notify[hidden], .contact[hidden] { display: none; }
+  .notify { max-width: 28rem; }
+  .notify label { display: block; font-weight: 600; margin-bottom: 0.5rem; }
+  .notify .row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .notify input[type="email"] {
+    flex: 1 1 14rem; min-width: 0; padding: 0.7rem 0.8rem; font: inherit; color: var(--ink);
+    background: var(--panel); border: 1px solid #8E9A91; border-radius: 3px;
+  }
+  .notify button, .replay {
+    font: inherit; font-weight: 600; cursor: pointer; border-radius: 3px;
+  }
+  .notify button {
+    padding: 0.7rem 1.1rem; color: #fff; background: var(--ink); border: 1px solid var(--ink);
+  }
+  .notify button:hover { background: #0F1B28; }
+  .notify small { display: block; margin-top: 0.55rem; color: var(--muted); font-size: 0.9rem; }
+  .notify small a { color: inherit; }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .notify-msg { margin: 0.7rem 0 0; font-weight: 600; color: var(--fix); }
+  .notify-msg.error { color: var(--old); }
+  .contact { margin: 0; }
+
+  /* the demonstration */
+  .demo-frame {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    min-width: 0;
+  }
+  .demo-scroll { overflow-x: auto; }
+  table.demo { width: 100%; min-width: 32rem; border-collapse: collapse; font-family: var(--mono); font-size: 0.86rem; line-height: 1.4; }
+  .demo caption { text-align: left; padding: 0.85rem 1rem 0.2rem; font-family: var(--sans); color: var(--muted); font-size: 0.9rem; }
+  .demo thead th {
+    font-family: var(--sans); font-weight: 600; font-size: 0.9rem; text-align: left;
+    padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--line); color: var(--muted);
+  }
+  .demo tbody th.gutter {
+    width: 2.4rem; font-weight: 400; color: var(--muted); text-align: center;
+    background: #F0F3EE; border-right: 1px solid var(--line); border-left: 3px solid transparent;
+    vertical-align: top; padding-top: 0.55rem;
+  }
+  .demo td { padding: 0.45rem 0.75rem; vertical-align: top; border-bottom: 1px solid #E3E8E1; white-space: pre; }
+  .demo tr:last-child td, .demo tr:last-child th { border-bottom: 0; }
+  .demo .old, .demo .new { display: block; min-height: 1.4em; }
+  .demo .new { color: var(--fix); }
+
+  /* finished (preview) state: the default */
+  .demo td.change .old { color: var(--old); text-decoration: line-through; text-decoration-thickness: 1px; }
+  .demo td.change .new {
+    background: var(--fix-bg); border-radius: 2px; padding-inline: 0.3em; margin-left: -0.3em; width: fit-content;
+  }
+  .demo tr.dupe .gutter { border-left-color: var(--fix); }
+  .demo .dupe-note td {
+    white-space: normal; font-family: var(--sans); font-size: 0.92rem; color: var(--ink);
+    padding: 0.55rem 0.75rem 0.7rem 3.2rem; background: #F3F6F1; border-bottom: 1px solid var(--line);
+  }
+
+  /* "before" state, only while the intro plays */
+  html.js-before .demo td.change:not(.done) .old { color: var(--ink); text-decoration: underline wavy var(--flag); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  html.js-before .demo td.change:not(.done) .new { visibility: hidden; }
+  html.js-before .demo:not(.show-dupes) tr.dupe .gutter { border-left-color: transparent; }
+  html.js-before .demo:not(.show-dupes) .dupe-note td { visibility: hidden; }
+  html.js-before .demo td.change.done .new { animation: mark 0.9s ease-out; }
+  @keyframes mark { from { background: var(--fix-flash); } to { background: var(--fix-bg); } }
+  .demo .old, .demo .new, .demo .gutter { transition: color 0.25s, border-color 0.35s; }
+
+  .status {
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+    padding: 0.7rem 1rem; border-top: 1px solid var(--line); background: #F3F6F1; font-size: 0.95rem;
+  }
+  .status p { margin: 0; flex: 1 1 12rem; }
+  .status .replay { flex: none; }
+  .replay { padding: 0.3rem 0.8rem; background: transparent; color: var(--fix); border: 1px solid var(--fix); }
+  .replay:hover { background: var(--fix-bg); }
+  .aside { margin: 0.75rem 0 0; color: var(--muted); font-size: 0.92rem; }
+
+  .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+  /* founder */
+  .why { border-top: 1px solid var(--line); padding-block: clamp(2rem, 5vw, 3.5rem); }
+  .why p {
+    margin: 0; max-width: 30em; font-family: var(--serif); font-size: clamp(1.4rem, 2.6vw, 1.9rem);
+    line-height: 1.3; letter-spacing: -0.005em; text-wrap: pretty;
+  }
+
+  footer { padding-block: 1.5rem 2.5rem; color: var(--muted); font-size: 0.92rem; }
+
+  @media (max-width: 56rem) {
+    .hero { grid-template-columns: minmax(0, 1fr); }
+  }
+
+  @media (max-width: 36rem) {
+    table.demo { min-width: 0; font-size: 0.74rem; }
+    .demo td { padding: 0.4rem 0.35rem; }
+    .demo thead th { padding: 0.5rem 0.35rem; }
+    .demo tbody th.gutter { width: 1.8rem; }
+    .demo .dupe-note td { padding-left: 2.2rem; padding-right: 0.5rem; }
+    .demo caption { padding-inline: 0.5rem; }
+  }
+
+  /* very narrow screens: drop the postcode column so nothing is clipped */
+  @media (max-width: 30rem) {
+    .demo thead th:nth-child(4), .demo tbody tr:not(.dupe-note) td:nth-child(4) { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="bar">
+      <div class="brand">DataFixer</div>
+      <div class="soon">Opening soon</div>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="headline">
+        <div>
+          <h1 id="headline">Fix your customer data without the risk.</h1>
+          <p class="lead">DataFixer finds what is wrong in your customer files, shows you every change before it happens, and lets you undo it afterwards.</p>
+          <ul class="promises">
+            <li>Preview every change before it is made.</li>
+            <li>Undo it afterwards, if you change your mind.</li>
+            <li>Nothing is merged unless you say so.</li>
+          </ul>
+          <p class="formats">Bring the files you already have: CSV, Excel, JSON or XML.</p>
+
+          <form class="notify" id="notify" method="post" hidden>
+            <label for="email">Your email address</label>
+            <div class="row">
+              <input id="email" name="email" type="email" autocomplete="email" required placeholder="you@company.com">
+              <button type="submit">Register your interest</button>
+            </div>
+            <p class="hp" aria-hidden="true"><label>Leave this empty <input type="text" name="website" tabindex="-1" autocomplete="off"></label></p>
+            <small>We will email you to confirm, then only to tell you when DataFixer opens. Read the <a href="privacy.html">privacy notice</a>. You can ask to be removed at any time.</small>
+            <p class="notify-msg" id="notify-msg" role="status" hidden></p>
+          </form>
+          <p class="contact" id="contact" hidden>Questions? <a id="contact-link" href="#"></a></p>
+        </div>
+
+        <div>
+          <div class="demo-frame">
+            <div class="demo-scroll">
+              <table class="demo" id="demo">
+                <caption>A messy customer file, as DataFixer would show it</caption>
+                <thead>
+                  <tr><th scope="col"><span class="sr-only">Row</span></th><th scope="col">Name</th><th scope="col">Email</th><th scope="col">Postcode</th></tr>
+                </thead>
+                <tbody>
+            <tr class="dupe"><th scope="row" class="gutter">1</th><td class="change"><span class="old">j0hn smith</span><span class="new">John Smith</span></td><td class="change"><span class="old">john.smith@gmial.com</span><span class="new">john.smith@gmail.com</span></td><td class="change"><span class="old">ls1 4ap</span><span class="new">LS1 4AP</span></td></tr>
+            <tr class="dupe"><th scope="row" class="gutter">2</th><td class="change"><span class="old">JOHN SMITH</span><span class="new">John Smith</span></td><td><span class="old">john.smith@gmail.com</span><span class="new" aria-hidden="true"></span></td><td><span class="old">LS1 4AP</span><span class="new" aria-hidden="true"></span></td></tr>
+            <tr><th scope="row" class="gutter">3</th><td class="change"><span class="old">mary  o&#x27;brien</span><span class="new">Mary O&#x27;Brien</span></td><td><span class="old">mary@obrien.example</span><span class="new" aria-hidden="true"></span></td><td class="change"><span class="old">m1 1ae</span><span class="new">M1 1AE</span></td></tr>
+            <tr><th scope="row" class="gutter">4</th><td class="change"><span class="old">Priya patel</span><span class="new">Priya Patel</span></td><td><span class="old">priya.patel@example.com</span><span class="new" aria-hidden="true"></span></td><td class="change"><span class="old">m2 2bb</span><span class="new">M2 2BB</span></td></tr>
+            <tr><th scope="row" class="gutter">5</th><td class="change"><span class="old">Tom Hargreaves </span><span class="new">Tom Hargreaves</span></td><td><span class="old">tom@hargreaves.example</span><span class="new" aria-hidden="true"></span></td><td class="change"><span class="old">b1 1aa</span><span class="new">B1 1AA</span></td></tr>
+                  <tr class="dupe-note"><td colspan="4">Rows 1 and 2 look like the same person. Nothing is merged unless you say so.</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="status">
+              <p id="count" aria-hidden="true">10 changes to review. Nothing has been changed yet.</p>
+              <p class="sr-only" id="count-sr" role="status">10 changes to review. Nothing has been changed yet.</p>
+              <button class="replay" id="replay" type="button">Replay</button>
+            </div>
+          </div>
+          <p class="aside">Five made-up rows. Yours will have more.</p>
+        </div>
+      </section>
+
+      <section class="why">
+        <p>I ran a CRM company for years and watched customers struggle with dirty data. This is the tool I wished they had.</p>
+      </section>
+    </main>
+
+    <footer>&copy; 2026 DataFixer &middot; <a href="privacy.html">Privacy</a></footer>
+  </div>
+
+<script>
+  /* ---- Early access: set ONE of these before publishing. Leave both empty to hide the sign-up. ---- */
+  var EARLY_ACCESS_ENDPOINT = "";   /* a form-handling URL that accepts a POST with an "email" field */
+  var CONTACT_EMAIL = "";           /* shown as a plain contact line when there is no endpoint */
+
+  (function () {
+    var form = document.getElementById('notify');
+    var contact = document.getElementById('contact');
+    if (EARLY_ACCESS_ENDPOINT) {
+      form.action = EARLY_ACCESS_ENDPOINT;
+      form.hidden = false;
+      form.addEventListener('submit', function (e) {
+        if (!window.fetch || !window.FormData) { return; }   /* old browser: normal submit */
+        e.preventDefault();
+        var msg = document.getElementById('notify-msg');
+        var btn = form.querySelector('button');
+        btn.disabled = true;
+        fetch(EARLY_ACCESS_ENDPOINT, { method: 'POST', body: new FormData(form), headers: { 'Accept': 'application/json' } })
+          .then(function (r) {
+            if (!r.ok) { throw new Error('bad'); }
+            form.querySelector('.row').hidden = true;
+            msg.className = 'notify-msg'; msg.textContent = 'Thank you. Please check your email and click the link to confirm.';
+            msg.hidden = false;
+          })
+          .catch(function () {
+            btn.disabled = false;
+            msg.className = 'notify-msg error'; msg.textContent = 'That did not go through. Please try again in a moment.';
+            msg.hidden = false;
+          });
+      });
+    } else if (/[?&]preview=form\b/.test(location.search)) {
+      /* design preview only: shows the form, submits nothing */
+      form.hidden = false;
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var m = document.getElementById('notify-msg');
+        m.className = 'notify-msg'; m.textContent = 'Preview only. The form is not connected yet.'; m.hidden = false;
+      });
+    } else if (CONTACT_EMAIL) {
+      var a = document.getElementById('contact-link');
+      a.href = 'mailto:' + CONTACT_EMAIL;
+      a.textContent = CONTACT_EMAIL;
+      contact.hidden = false;
+    }
+
+    /* ---- The demonstration: runs once, then rests in its finished state. ---- */
+    var root = document.documentElement;
+    var table = document.getElementById('demo');
+    var allChanges = Array.prototype.slice.call(table.querySelectorAll('td.change'));
+    var changes = allChanges, total = changes.length;
+    var rowCount = table.querySelectorAll('tbody tr:not(.dupe-note)').length;
+    function refresh() {
+      /* count only the cells that are visible at this screen width */
+      changes = allChanges.filter(function (c) { return c.offsetParent !== null; });
+      total = changes.length;
+    }
+    var countEl = document.getElementById('count');
+    var srEl = document.getElementById('count-sr');
+    var btn = document.getElementById('replay');
+    var timers = [];
+
+    function clearTimers() { timers.forEach(clearTimeout); timers = []; }
+    function finalText() { return total + ' changes to review. Nothing has been changed yet.'; }
+
+    function showFinal() {
+      clearTimers(); refresh();
+      changes.forEach(function (c) { c.classList.add('done'); });
+      table.classList.add('show-dupes');
+      root.classList.remove('js-before');
+      countEl.textContent = finalText();
+      srEl.textContent = finalText();
+    }
+
+    function play() {
+      clearTimers(); refresh();
+      root.classList.add('js-before');
+      table.classList.remove('show-dupes');
+      allChanges.forEach(function (c) { c.classList.remove('done'); });
+      countEl.textContent = 'Reading ' + rowCount + ' rows…';
+      srEl.textContent = '';
+      var t = 1000;
+      changes.forEach(function (c, i) {
+        t += 320;
+        timers.push(setTimeout(function () {
+          c.classList.add('done');
+          countEl.textContent = (i + 1) + (i === 0 ? ' problem found' : ' problems found');
+        }, t));
+      });
+      timers.push(setTimeout(function () { table.classList.add('show-dupes'); }, t + 450));
+      timers.push(setTimeout(function () {
+        countEl.textContent = finalText();
+        srEl.textContent = finalText();
+        root.classList.remove('js-before');
+      }, t + 1500));
+    }
+
+    if (root.classList.contains('js-before')) { play(); } else { btn.style.display = 'none'; }
+    btn.addEventListener('click', play);
+  })();
+</script>
+</body>
+</html>
