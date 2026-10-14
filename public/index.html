@@ -279,8 +279,8 @@
 
 <script>
   /* ---- Early access: set ONE of these before publishing. Leave both empty to hide the sign-up. ---- */
-  var EARLY_ACCESS_ENDPOINT = "https://app.datafixer.tools/register-interest";   
-  var CONTACT_EMAIL = "support@datafixer.tools";           
+  var EARLY_ACCESS_ENDPOINT = "https://app.datafixer.tools/register-interest";   /* a form-handling URL that accepts a POST with an "email" field */
+  var CONTACT_EMAIL = "support@datafixer.tools"; 
 
   (function () {
     var form = document.getElementById('notify');
@@ -298,7 +298,7 @@
           .then(function (r) {
             if (!r.ok) { throw new Error('bad'); }
             form.querySelector('.row').hidden = true;
-            msg.className = 'notify-msg'; msg.textContent = 'Thank you. Please check your email and click the link to confirm.';
+            msg.className = 'notify-msg'; msg.textContent = 'Thank you. Please check your email and click the link to confirm. If it does not arrive within a few minutes, check your spam folder.';
             msg.hidden = false;
           })
           .catch(function () {
