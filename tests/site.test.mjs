@@ -48,10 +48,11 @@ test('the new copy is on the front page, in order: demo, what makes it different
   const different = index.indexOf('class="different"');
   const founder = index.indexOf('class="why"');
   assert.ok(demo > 0 && demo < different && different < founder, 'section order');
-  assert.ok(index.includes('Coming next: one-click flows that clean, de-duplicate and export on their own; reports with charts; and an API.'));
-  const next = content.coming_next;
+  assert.ok(index.includes('Coming soon: one-click flows that clean, de-duplicate and export on their own; reports with charts; and an API.'));
+  assert.ok(!index.includes('Coming next'));
+  const next = content.coming_soon;
   assert.equal(next.split('. ').length, 1, 'one sentence');
-  assert.doesNotMatch(next, /\b(20\d\d|january|february|march|april|may|june|july|august|september|october|november|december|soon|q[1-4])\b/i, 'no dates');
+  assert.doesNotMatch(next, /\b(20\d\d|january|february|march|april|may|june|july|august|september|october|november|december|q[1-4])\b/i, 'no dates');
   // kept as they were
   for (const kept of [content.headline, content.lead, content.formats, content.founder, ...content.promises]) assert.ok(index.includes(kept), kept);
   assert.ok(index.includes('Opening soon'));
@@ -165,4 +166,15 @@ test('metadata is unchanged', () => {
   for (const kept of ['<title>DataFixer: fix your data without the risk</title>', 'og:image" content="https://www.datafixer.tools/og-image.png"', '<meta name="description" content="DataFixer finds what is wrong in your data files, shows you every change before it happens, and lets you undo it afterwards. Opening soon.">']) {
     assert.ok(index.includes(kept), kept);
   }
+});
+
+test('the demo is labelled as an illustration, and the fourth item is the activity record', () => {
+  assert.ok(index.includes('<caption>An illustration of how DataFixer shows changes</caption>'));
+  assert.ok(!index.includes('A messy file, as DataFixer would show it'));
+  assert.ok(index.includes('<p class="aside">Five made-up rows. Yours will have more.</p>'), 'the existing line is kept');
+  assert.ok(index.includes('<p class="aside" id="demo-note">For illustration only: your files, results and screens will differ.</p>'));
+  assert.ok(index.indexOf('id="demo-note"') > index.indexOf('id="demo"') && index.indexOf('id="demo-note"') < index.indexOf('class="different"'), 'beside the demo table');
+  assert.equal(content.different.items[3].title, 'A record of every change');
+  assert.ok(index.includes('<h3>A record of every change</h3><p>See who did what, and when, in an activity log your team can check.</p>'));
+  assert.ok(!index.includes('<h3>Every change is logged</h3>'));
 });

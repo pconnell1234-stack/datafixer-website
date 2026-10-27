@@ -273,7 +273,7 @@
           <div class="demo-frame">
             <div class="demo-scroll">
               <table class="demo" id="demo">
-                <caption>A messy file, as DataFixer would show it</caption>
+                <caption>{{demo.caption}}</caption>
                 <thead>
                   <tr><th scope="col"><span class="sr-only">Row</span></th><th scope="col">Name</th><th scope="col">Email</th><th scope="col">Postcode</th></tr>
                 </thead>
@@ -293,7 +293,8 @@
               <button class="replay" id="replay" type="button">Replay</button>
             </div>
           </div>
-          <p class="aside">Five made-up rows. Yours will have more.</p>
+          <p class="aside">{{demo.rows_note}}</p>
+          <p class="aside" id="demo-note">{{demo.illustration_note}}</p>
         </div>
       </section>
 

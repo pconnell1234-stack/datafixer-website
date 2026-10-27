@@ -40,7 +40,7 @@ export function computed(content, site, page) {
   const different = content.different
     ? `      <section class="different" aria-labelledby="different-h">\n        <h2 id="different-h">${escapeHtml(content.different.heading)}</h2>\n        <ul class="different-list">\n`
       + content.different.items.map((i) => `          <li><h3>${escapeHtml(i.title)}</h3><p>${escapeHtml(i.text)}</p></li>`).join('\n')
-      + `\n        </ul>\n        <p class="next">${escapeHtml(content.coming_next)}</p>\n      </section>\n\n`
+      + `\n        </ul>\n        <p class="next">${escapeHtml(content.coming_soon)}</p>\n      </section>\n\n`
     : '';
   const privacy = content.privacy_aside
     ? `          <p class="privacy-aside"><strong>${escapeHtml(content.privacy_aside.title)}</strong> ${escapeHtml(content.privacy_aside.text)}</p>\n`

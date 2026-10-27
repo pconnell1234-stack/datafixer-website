@@ -26,14 +26,19 @@
                 "text": "Review each possible match, confirm or reject it, and filter the list to find what matters."
             },
             {
-                "title": "Every change is logged",
-                "text": "Every change is logged and visible to you."
+                "title": "A record of every change",
+                "text": "See who did what, and when, in an activity log your team can check."
             }
         ]
     },
-    "coming_next": "Coming next: one-click flows that clean, de-duplicate and export on their own; reports with charts; and an API.",
+    "coming_soon": "Coming soon: one-click flows that clean, de-duplicate and export on their own; reports with charts; and an API.",
     "privacy_aside": {
         "title": "Privacy assured.",
         "text": "Every change is logged and visible to you."
+    },
+    "demo": {
+        "caption": "An illustration of how DataFixer shows changes",
+        "rows_note": "Five made-up rows. Yours will have more.",
+        "illustration_note": "For illustration only: your files, results and screens will differ."
     }
 }
