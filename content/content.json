@@ -1,0 +1,39 @@
+{
+    "_note": "All visible page wording lives here. Edit the words, then run: node build.mjs (it rewrites public/index.html and public/privacy.html). Plain text only: the build escapes it. British English.",
+    "status": "Opening soon",
+    "headline": "Fix your data without the risk.",
+    "lead": "DataFixer finds what is wrong in your data files, shows you every change before it happens, and lets you undo it afterwards.",
+    "promises": [
+        "Preview every change before it is made.",
+        "Undo it afterwards, if you change your mind.",
+        "Nothing is merged unless you say so."
+    ],
+    "formats": "Bring the files you already have: CSV, Excel, JSON or XML.",
+    "founder": "I ran a CRM company for years and watched people struggle with dirty data. This is the tool I wished they had.",
+    "different": {
+        "heading": "What makes it different",
+        "items": [
+            {
+                "title": "Preview and undo",
+                "text": "See every change before it happens, and undo it afterwards if you change your mind."
+            },
+            {
+                "title": "Clean and match in one place",
+                "text": "Fix problems such as badly formatted telephone numbers and postcodes, then find duplicates, with rules you can see."
+            },
+            {
+                "title": "You decide",
+                "text": "Review each possible match, confirm or reject it, and filter the list to find what matters."
+            },
+            {
+                "title": "Every change is logged",
+                "text": "Every change is logged and visible to you."
+            }
+        ]
+    },
+    "coming_next": "Coming next: one-click flows that clean, de-duplicate and export on their own; reports with charts; and an API.",
+    "privacy_aside": {
+        "title": "Privacy assured.",
+        "text": "Every change is logged and visible to you."
+    }
+}

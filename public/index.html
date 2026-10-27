@@ -191,6 +191,16 @@
   .replay:hover { background: var(--fix-bg); }
   .aside { margin: 0.75rem 0 0; color: var(--muted); font-size: 0.92rem; }
 
+  /* what makes it different */
+  .different { border-top: 1px solid var(--line); padding-block: clamp(2rem, 5vw, 3.5rem); }
+  .different h2 { margin: 0 0 1.5rem; font-family: var(--serif); font-weight: 700; font-size: clamp(1.5rem, 2.8vw, 2rem); line-height: 1.15; letter-spacing: -0.01em; }
+  .different-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem clamp(1.5rem, 4vw, 3rem); }
+  .different-list h3 { margin: 0 0 0.3rem; font-size: 1.05rem; line-height: 1.3; }
+  .different-list p { margin: 0; max-width: 30em; }
+  .next { margin: 1.75rem 0 0; max-width: 46em; color: var(--muted); font-size: 0.95rem; }
+  .privacy-aside { margin: 1.5rem 0 0; padding-left: 0.9rem; border-left: 3px solid var(--line); max-width: 28rem; font-size: 0.95rem; }
+  footer a { white-space: nowrap; }
+
   .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 
   /* founder */
@@ -204,6 +214,10 @@
 
   @media (max-width: 56rem) {
     .hero { grid-template-columns: minmax(0, 1fr); }
+  }
+
+  @media (max-width: 40rem) {
+    .different-list { grid-template-columns: minmax(0, 1fr); }
   }
 
   @media (max-width: 36rem) {
@@ -255,6 +269,7 @@
             <p class="notify-msg" id="notify-msg" role="status" hidden></p>
           </form>
           <p class="contact" id="contact" hidden>Questions? <a id="contact-link" href="#"></a></p>
+          <p class="privacy-aside"><strong>Privacy assured.</strong> Every change is logged and visible to you.</p>
         </div>
 
         <div>
@@ -285,12 +300,23 @@
         </div>
       </section>
 
+      <section class="different" aria-labelledby="different-h">
+        <h2 id="different-h">What makes it different</h2>
+        <ul class="different-list">
+          <li><h3>Preview and undo</h3><p>See every change before it happens, and undo it afterwards if you change your mind.</p></li>
+          <li><h3>Clean and match in one place</h3><p>Fix problems such as badly formatted telephone numbers and postcodes, then find duplicates, with rules you can see.</p></li>
+          <li><h3>You decide</h3><p>Review each possible match, confirm or reject it, and filter the list to find what matters.</p></li>
+          <li><h3>Every change is logged</h3><p>Every change is logged and visible to you.</p></li>
+        </ul>
+        <p class="next">Coming next: one-click flows that clean, de-duplicate and export on their own; reports with charts; and an API.</p>
+      </section>
+
       <section class="why">
         <p>I ran a CRM company for years and watched people struggle with dirty data. This is the tool I wished they had.</p>
       </section>
     </main>
 
-    <footer>&copy; 2026 DataFixer &middot; <a href="privacy.html">Privacy</a></footer>
+    <footer>&copy; 2026 DataFixer &middot; <a href="privacy.html">Privacy</a> &middot; <a href="mailto:support@datafixer.tools">Contact</a></footer>
   </div>
 
 <script>

@@ -1,0 +1,13 @@
+{
+  "_note": "Company and site details. Nothing here is invented: leave a value empty until it is true.",
+  "copyright_year": "2026",
+  "brand": "DataFixer",
+  "contact_email": "support@datafixer.tools",
+  "terms": { "enabled": false, "path": "terms.html", "_note": "Set enabled to true only once public/terms.html exists; the footer link is hidden until then." },
+  "company": {
+    "_note": "The trading-name line on privacy.html (and the terms page) is published only when ALL THREE values are filled in. Do not guess them: take them from Companies House.",
+    "legal_name": "",
+    "company_number": "",
+    "registered_office": ""
+  }
+}
